@@ -1,0 +1,6 @@
+{
+  "name": "Feature Backlog",
+  "description": "An interactive Kanban board to track your core feature backlog, collaboration tools, user management, and analytics with priority badges and search filtering.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
