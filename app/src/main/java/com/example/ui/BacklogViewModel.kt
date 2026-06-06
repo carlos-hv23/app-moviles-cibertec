@@ -37,6 +37,25 @@ class BacklogViewModel(application: Application) : AndroidViewModel(application)
     private val repository: BacklogRepository
     private val userRepository: UserRepository
 
+    // NOTE: Admin credentials are hardcoded for TEST/DEMO only.
+    // This must NOT be used in production — replace with proper backend authentication.
+    val isAdminLoggedIn = MutableStateFlow(false)
+
+    fun adminLogIn(username: String, password: String): Boolean {
+        return if (username == "admin" && password == "admin123") {
+            isAdminLoggedIn.value = true
+            true
+        } else {
+            false
+        }
+    }
+
+    fun adminLogOut() {
+        isAdminLoggedIn.value = false
+        // Also log out the regular user session when the admin session ends
+        logOut()
+    }
+
     val currentUserState = MutableStateFlow<User?>(null)
     val authError = MutableStateFlow<String?>(null)
     val authLoading = MutableStateFlow(false)

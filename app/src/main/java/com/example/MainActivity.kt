@@ -65,9 +65,15 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MyApplicationTheme {
+                val isAdminLoggedIn by viewModel.isAdminLoggedIn.collectAsStateWithLifecycle()
                 val currentUser by viewModel.currentUserState.collectAsStateWithLifecycle()
-                
-                if (currentUser == null) {
+
+                if (!isAdminLoggedIn) {
+                    // Block all app content until admin credentials are verified
+                    com.example.ui.AdminLoginScreen(
+                        onLoginSuccess = { viewModel.isAdminLoggedIn.value = true }
+                    )
+                } else if (currentUser == null) {
                     AuthScreen(viewModel = viewModel)
                 } else {
                     Scaffold(
@@ -1495,6 +1501,30 @@ fun SettingsTabContent(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(Localization.get("btn_logout", lang), fontSize = 14.sp)
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Close admin test session and return to AdminLoginScreen
+                    OutlinedButton(
+                        onClick = { viewModel.adminLogOut() },
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF6750A4)),
+                        border = ButtonDefaults.outlinedButtonBorder.copy(
+                            brush = androidx.compose.ui.graphics.SolidColor(Color(0xFF6750A4))
+                        ),
+                        shape = RoundedCornerShape(100.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(44.dp)
+                            .testTag("admin_logout_button")
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = "Cerrar sesión Admin",
+                            tint = Color(0xFF6750A4)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Cerrar sesión Admin", fontSize = 14.sp)
                     }
                 }
             }
