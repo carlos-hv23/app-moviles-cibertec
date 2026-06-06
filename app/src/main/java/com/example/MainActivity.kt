@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
                 if (!isAdminLoggedIn) {
                     // Block all app content until admin credentials are verified
                     com.example.ui.AdminLoginScreen(
-                        onLoginSuccess = { viewModel.isAdminLoggedIn.value = true }
+                        onLoginAttempt = { user, pass -> viewModel.adminLogIn(user, pass) }
                     )
                 } else if (currentUser == null) {
                     AuthScreen(viewModel = viewModel)
@@ -1509,9 +1509,7 @@ fun SettingsTabContent(
                     OutlinedButton(
                         onClick = { viewModel.adminLogOut() },
                         colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF6750A4)),
-                        border = ButtonDefaults.outlinedButtonBorder.copy(
-                            brush = androidx.compose.ui.graphics.SolidColor(Color(0xFF6750A4))
-                        ),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF6750A4)),
                         shape = RoundedCornerShape(100.dp),
                         modifier = Modifier
                             .fillMaxWidth()

@@ -1,7 +1,7 @@
 package com.example.ui
 
-// NOTE: This login is for TEST/DEMO purposes only.
-// Credentials are hardcoded (admin / admin123) and must NOT be used in production.
+// NOTE: This screen is for TEST/DEMO purposes only.
+// Credentials are validated via the ViewModel (admin / admin123) and must NOT be used in production.
 // Replace with a proper authentication backend before any production release.
 
 import androidx.compose.foundation.background
@@ -23,21 +23,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * Admin login screen that gates the entire app.
+ *
+ * @param onLoginAttempt Called with (username, password); returns true if credentials are valid.
+ */
 @Composable
 fun AdminLoginScreen(
-    onLoginSuccess: () -> Unit
+    onLoginAttempt: (String, String) -> Boolean
 ) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
     fun attempt() {
-        if (username == "admin" && password == "admin123") {
-            errorMessage = null
-            onLoginSuccess()
-        } else {
-            errorMessage = "Usuario o contraseña incorrectos"
-        }
+        val success = onLoginAttempt(username.trim(), password)
+        errorMessage = if (success) null else "Usuario o contraseña incorrectos"
     }
 
     Box(

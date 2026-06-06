@@ -39,11 +39,12 @@ class BacklogViewModel(application: Application) : AndroidViewModel(application)
 
     // NOTE: Admin credentials are hardcoded for TEST/DEMO only.
     // This must NOT be used in production — replace with proper backend authentication.
-    val isAdminLoggedIn = MutableStateFlow(false)
+    private val _isAdminLoggedIn = MutableStateFlow(false)
+    val isAdminLoggedIn: StateFlow<Boolean> = _isAdminLoggedIn
 
     fun adminLogIn(username: String, password: String): Boolean {
         return if (username == "admin" && password == "admin123") {
-            isAdminLoggedIn.value = true
+            _isAdminLoggedIn.value = true
             true
         } else {
             false
@@ -51,7 +52,7 @@ class BacklogViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun adminLogOut() {
-        isAdminLoggedIn.value = false
+        _isAdminLoggedIn.value = false
         // Also log out the regular user session when the admin session ends
         logOut()
     }
